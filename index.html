@@ -96,6 +96,7 @@ input{background:#1c3556;border-color:#5a7ca8}
 .item,.hrow{border-color:#46688f}
 h4,.hrow small{color:#c3d8f2}
 #sheet[hidden],#ov[hidden]{display:none}
+.ver{grid-column:1/3;text-align:center;font-size:10px;color:#fff;opacity:.7;margin-top:8px}
 </style></head><body><div id="app"></div><div id="sheet" hidden></div><div id="ov" hidden></div>
 <script>
 const K='vendo1',$=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -120,7 +121,7 @@ $('#app').innerHTML=`<div class="machine"><div class="top"><div class="sign">VEN
 <div class="panel"><div class="lcd">${disp.map(esc).join('\n')}</div><div class="keys">${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="k">${n}</button>`).join('')}<button class="k" data-a="clr">←</button><button class="k">0</button><button class="k ok" data-a="vend">OK</button></div><div class="rdr"></div><div class="coin"></div></div>
 <div class="brk"><button data-a="ovr">🚨 BREAK GLASS · STRESS OVERRIDE</button></div>
 <div class="bin" data-a="clrbin">${binItem?pic(binItem):'PUSH'}</div>
-<div class="nav"><button data-a="stock">SERVICE</button><button data-a="hist">HISTORY</button><button data-a="set">SETTINGS</button></div></div>`}
+<div class="nav"><button data-a="stock">SERVICE</button><button data-a="hist">HISTORY</button><button data-a="set">SETTINGS</button></div><div class="ver">build v4</div></div>`}
 function pick(i){if(busy)return;const s=S.snacks[i];if(!s)return;sel=i;disp=[code(i),s.name.toUpperCase(),s.qty<1?'SOLD OUT':'1 TOKEN'];navigator.vibrate&&navigator.vibrate(10);render()}
 function vend(){if(busy)return;const s=S.snacks[sel];if(!s){disp=['SELECT A SLOT','FIRST'];return render()}
 if(s.qty<1){disp=[code(sel),'SOLD OUT'];return render()}
