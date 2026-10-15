@@ -1,0 +1,157 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Vendo</title><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icons/icon-180.png"><meta name="theme-color" content="#1d5a9e"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Vendo"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+:root{--bg:#0e1013;--metal:#2a2e33;--led:#ffb000;--red:#e0243a;--ink:#e8e6e1;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e1013}}
+:root[data-theme=dark]{--bg:#0e1013}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px system-ui,-apple-system,sans-serif}
+.mono,.lcd,.tag,.so,button{font-family:ui-monospace,Menlo,monospace}
+.machine{max-width:440px;margin:8px auto;background:linear-gradient(160deg,#3a3f45,#23262a);border-radius:14px;border:2px solid #4a5058;box-shadow:0 10px 40px #000;padding-bottom:12px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:10px 14px}
+.sign{font:800 26px ui-monospace,monospace;letter-spacing:6px;color:#fff;text-shadow:0 0 12px var(--red),0 0 2px var(--red)}
+.toks{font:700 16px ui-monospace,monospace;color:var(--led);background:#1a1205;padding:4px 10px;border-radius:4px;border:2px inset #333;text-shadow:0 0 6px rgba(255,176,0,.7);letter-spacing:3px}
+.glass{position:relative;margin:0 10px 10px;padding:8px;background:linear-gradient(#0d1a22,#06090c);border:6px solid #1b1e22;border-radius:6px;box-shadow:inset 0 0 30px #000,0 0 0 2px #444;overflow:hidden}
+.glass:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.13),transparent 28%,transparent 62%,rgba(255,255,255,.05));pointer-events:none}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.slot{position:relative;height:132px;border-bottom:5px solid #8a9096;background:radial-gradient(ellipse at 50% 0,rgba(255,240,200,.2),transparent 70%);cursor:pointer;overflow:hidden}
+.slot.sel{outline:2px solid var(--led);box-shadow:inset 0 0 16px rgba(255,176,0,.5)}
+.coil{position:absolute;left:8%;right:8%;bottom:20px;height:12px;background:repeating-linear-gradient(90deg,#888 0 3px,transparent 3px 9px);border-radius:6px;opacity:.6}
+.it{position:absolute;bottom:26px;left:50%;width:58%;height:84px;transform-origin:bottom;transform:translateX(calc(-50% + var(--k)*7px - 14px)) translateY(calc(var(--k)*-5px)) scale(calc(1 - var(--k)*.05));z-index:calc(9 - var(--k));filter:brightness(calc(1 - var(--k)*.12)) drop-shadow(0 3px 2px #000);transition:transform .85s cubic-bezier(.6,0,1,.6),opacity .85s}
+.it img{width:100%;height:100%;object-fit:contain}
+.it.drop{transform:translateX(-50%) translateY(190px);opacity:.2}
+.pk{width:100%;height:100%;border-radius:4px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;font:700 10px/1.15 system-ui;padding:3px;color:#fff;border:1px solid rgba(255,255,255,.3)}
+.pk b{font-size:8px;opacity:.8;font-weight:600}
+.tag{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;padding:1px 6px;font-size:11px;font-weight:700;background:#e8e6e1;color:#111}
+.so{position:absolute;top:38%;width:100%;text-align:center;font-size:11px;font-weight:700;letter-spacing:2px;color:#e04050;z-index:20}
+.panel{display:grid;grid-template-columns:1fr 96px;gap:10px;margin:0 10px 10px}
+.lcd{background:#1a1205;border:3px inset #333;border-radius:4px;color:var(--led);font-weight:700;font-size:13px;line-height:1.4;padding:8px;min-height:92px;text-shadow:0 0 6px rgba(255,176,0,.6);white-space:pre-line;overflow:hidden}
+button{cursor:pointer;border:0;color:#fff;border-radius:8px;font-weight:700;font-size:13px;padding:10px}
+.vend{background:linear-gradient(#2fa04f,#1b6b34);box-shadow:0 4px 0 #0f4220;width:100%;height:100%;font-size:16px;letter-spacing:2px}
+.vend:active{transform:translateY(3px);box-shadow:0 1px 0 #0f4220}
+.brk{margin:0 10px 10px;padding:6px;border-radius:8px;background:repeating-linear-gradient(45deg,var(--red) 0 12px,#111 12px 24px)}
+.brk button{width:100%;background:#7a0f1c;border:2px solid #ffd0d5;letter-spacing:1px;font-size:14px;padding:12px}
+.bin{margin:0 10px;height:74px;background:#050607;border:4px solid #1b1e22;border-radius:6px 6px 0 0;display:flex;align-items:center;justify-content:center;color:#555;font-size:11px;letter-spacing:2px;overflow:hidden}
+.bin .pk{width:44px;height:60px}.bin img{height:62px}
+.nav{display:flex;gap:8px;margin:10px 10px 0}.nav button{flex:1;background:#3a3f45}
+#sheet,#ov{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+#ov{align-items:center;padding:16px}
+.card{background:#1a1d21;width:100%;max-width:440px;max-height:90%;overflow:auto;border-radius:14px 14px 0 0;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+#ov .card{border-radius:14px;text-align:center;border:2px solid var(--red)}
+h3,h4{margin:0 0 10px;font-family:ui-monospace,monospace;letter-spacing:2px}h4{margin-top:16px;font-size:12px;color:#9aa}
+input{width:100%;background:#0e1013;border:1px solid #444;color:var(--ink);border-radius:6px;padding:10px;margin:0 0 8px;font-size:16px}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:8px}.row>*{flex:1}.row .n{flex:0 0 auto}
+.btn{display:block;text-align:center;background:#3a3f45;padding:10px;border-radius:8px;font-weight:700;margin-bottom:8px;cursor:pointer}
+.go{width:100%;background:#1f7a3a;font-size:15px}.sm{padding:6px 12px;background:#3a3f45}
+.item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #2c3036}.item span{flex:1}
+video{width:100%;border-radius:8px;margin-bottom:8px}
+.bar{height:14px;background:#331;border-radius:7px;overflow:hidden;margin:14px 0}.bar i{display:block;height:100%;width:0;background:var(--red)}
+#hold{width:100%;padding:18px;background:var(--red);font-size:15px;touch-action:none;user-select:none;-webkit-user-select:none}
+.alarm:before{content:"";position:fixed;inset:0;background:var(--red);z-index:99;pointer-events:none;animation:fl .3s 4 alternate}
+@keyframes fl{from{opacity:0}to{opacity:.55}}
+.hrow{padding:8px 0;border-bottom:1px solid #2c3036;display:flex;justify-content:space-between;gap:8px}.hrow small{color:#9aa}.e{color:#ff7080}
+.msg{color:var(--led);font-size:12px;margin:0 0 8px}
+.machine{display:grid;grid-template-columns:1fr 112px;background:linear-gradient(160deg,#1d5a9e,#0f2f57);border:3px solid #0a1f3d;border-radius:22px;padding-bottom:12px}
+.top{grid-column:1/3}.glass{grid-column:1;margin:0 8px 10px 10px;border:4px solid #14161d;background:linear-gradient(#0d0f16,#07080c);box-shadow:inset 0 0 26px #000,0 0 0 3px #f08a1c,0 0 22px rgba(255,150,30,.55)}
+.glass:before{content:"";position:absolute;top:3px;left:14%;right:14%;height:4px;border-radius:2px;background:#ffb43a;box-shadow:0 0 12px #ffa21f;z-index:3}
+.panel{grid-column:2;display:flex;flex-direction:column;gap:8px;margin:0 10px 10px 0}
+.brk,.bin,.nav{grid-column:1/3}
+.slot{height:114px;border-bottom:8px solid #2a2d38;background:radial-gradient(ellipse at 50% 0,rgba(255,170,60,.16),transparent 70%)}
+.slot.sel{outline:2px solid #ffb43a;box-shadow:inset 0 0 18px rgba(255,170,60,.6)}
+.it{bottom:32px;width:76%;height:76px;transform:translateX(calc(-50% + var(--k)*4px - 8px)) translateY(calc(var(--k)*-3px)) scale(calc(1 - var(--k)*.04))}
+.coil{left:24%;right:24%;bottom:28px;height:16px;border:3px solid #9aa0a8;border-bottom:0;border-radius:16px 16px 0 0;background:none;opacity:.9;z-index:12}
+.tag{left:50%;right:auto;transform:translateX(-50%);bottom:3px;width:max-content;gap:7px;border-radius:10px;padding:2px 11px;background:#10131a;color:#fff;border:1px solid #333}
+.tag span:last-child{color:var(--led);font-size:10px}
+.so{top:34%;z-index:20}
+.lcd{height:150px;min-height:150px;text-align:center;font-size:12px;background:#0d0f16;border:3px solid #c77a12;border-radius:8px;overflow:hidden;word-break:break-word}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;background:#0b1a2e;padding:7px;border-radius:10px}
+.k{background:#10131a;color:var(--led);border:1px solid #c77a12;border-radius:8px;padding:8px 0;font-size:15px}.k.ok{font-size:11px}
+.rdr{height:60px;border:2px solid #c77a12;border-radius:10px;background:#10131a;display:flex;align-items:center;justify-content:center;color:var(--led);font:700 18px ui-monospace,monospace;transform:rotate(-8deg)}
+.rdr:after{content:"))))"}
+.coin{height:44px;border-radius:8px;background:#10131a;position:relative}.coin:after{content:"";position:absolute;left:30%;right:30%;top:60%;height:4px;background:var(--led);border-radius:2px}
+.bin{height:96px;margin:0 10px;background:#10131a;border:4px solid #f08a1c;border-radius:16px;color:#f3e3b8;font:800 34px ui-monospace,monospace;letter-spacing:6px;cursor:pointer}
+.bin .pk{width:50px;height:70px}.bin img{height:78px}
+.nav button{background:#0b2447}
+</style></head><body><div id="app"></div><div id="sheet" hidden></div><div id="ov" hidden></div>
+<script>
+const K='vendo1',$=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const def=()=>({snacks:[],hist:[],ovlog:[],set:{allow:2,ov:true,maxb:1,reset:0},day:{d:'',base:2,used:0,bonus:0}});
+let S=(()=>{try{const o=JSON.parse(localStorage.getItem(K)||'{}'),d=def();return{...d,...o,set:{...d.set,...o.set},day:{...d.day,...o.day}}}catch(e){return def()}})();
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+let sel=-1,busy=false,binItem=null,sheet='',draft={bc:'',nm:'',br:'',img:'',q:1},note='',armed=false,disp=['SNACK','TIME! :)'];
+const dayKey=()=>{const d=new Date(Date.now()-S.set.reset*36e5);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
+function roll(){const t=dayKey();if(S.day.d!==t){const b=S.day.d?S.day.bonus:0;S.day={d:t,base:Math.max(0,S.set.allow-b),used:0,bonus:0};save()}}
+const left=()=>S.day.base+S.day.bonus-S.day.used,code=i=>String.fromCharCode(65+Math.floor(i/3))+(i%3+1);
+const hue=s=>[...s].reduce((a,c)=>a+c.charCodeAt(0),0)%360;
+const pic=s=>s.img?`<img src="${s.img}" alt="${esc(s.name)}">`:`<div class="pk" style="background:hsl(${hue(s.name)} 55% 38%)"><b>${esc(s.brand)}</b>${esc(s.name)}</div>`;
+const fmt=t=>{const d=new Date(t);return d.toLocaleDateString([], {day:'numeric',month:'short'})+' '+d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})};
+function render(){roll();const n=Math.max(12,Math.ceil(S.snacks.length/3)*3);let g='';
+for(let i=0;i<n;i++){const s=S.snacks[i],c=code(i);
+if(!s){g+=`<div class="slot"><div class="coil"></div><div class="tag"><span>${c}</span><span>—</span></div></div>`;continue}
+let it='';for(let k=0;k<Math.min(s.qty,5);k++)it+=`<div class="it" style="--k:${k}">${pic(s)}</div>`;
+g+=`<div class="slot${i===sel?' sel':''}" data-i="${i}">${it}<div class="coil"></div>${s.qty<1?'<div class="so">SOLD OUT</div>':''}<div class="tag"><span>${c}</span><span>×${s.qty}</span></div></div>`}
+const L=left(),tot=S.day.base+S.day.bonus,dots=Array.from({length:tot},(_,i)=>i<L?'●':'○').join(' ')||'—';
+$('#app').innerHTML=`<div class="machine"><div class="top"><div class="sign">VENDO</div><div class="toks">TOKENS ${dots}</div></div>
+<div class="glass"><div class="grid">${g}</div></div>
+<div class="panel"><div class="lcd">${disp.map(esc).join('\n')}</div><div class="keys">${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="k">${n}</button>`).join('')}<button class="k" data-a="clr">←</button><button class="k">0</button><button class="k ok" data-a="vend">OK</button></div><div class="rdr"></div><div class="coin"></div></div>
+<div class="brk"><button data-a="ovr">🚨 BREAK GLASS · STRESS OVERRIDE</button></div>
+<div class="bin" data-a="clrbin">${binItem?pic(binItem):'PUSH'}</div>
+<div class="nav"><button data-a="stock">SERVICE</button><button data-a="hist">HISTORY</button><button data-a="set">SETTINGS</button></div></div>`}
+function pick(i){if(busy)return;const s=S.snacks[i];if(!s)return;sel=i;disp=[code(i),s.name.toUpperCase(),s.qty<1?'SOLD OUT':'1 TOKEN'];navigator.vibrate&&navigator.vibrate(10);render()}
+function vend(){if(busy)return;const s=S.snacks[sel];if(!s){disp=['SELECT A SLOT','FIRST'];return render()}
+if(s.qty<1){disp=[code(sel),'SOLD OUT'];return render()}
+if(left()<1){disp=['NO TOKENS LEFT','TRY AGAIN TOMORROW','OR BREAK THE GLASS'];return render()}
+busy=true;disp=['DISPENSING...',s.name.toUpperCase()];render();const f=document.querySelector('.slot.sel .it');f&&f.classList.add('drop');navigator.vibrate&&navigator.vibrate([30,40,60]);
+setTimeout(()=>{const ov=S.day.used>=S.day.base;S.day.used++;s.qty--;S.hist.push({t:Date.now(),n:s.name,ov});binItem=s;disp=['KA-CHUNK',s.name.toUpperCase()+' DISPENSED','Go and grab one from the cupboard.','Stock remaining: '+s.qty];busy=false;sel=-1;save();render()},900)}
+function ovrOpen(){const d=S.day;let why='';
+if(!S.set.ov)why='Emergency override is switched off in settings.';
+else if(left()>0)why='You still have tokens. Use those first.';
+else if(d.base<S.set.allow)why="You're already paying back an override. No borrowing from Future Future You.";
+else if(d.bonus>=S.set.maxb)why='Borrowing limit reached.';
+const tm=Math.max(0,S.set.allow-d.bonus-1);
+$('#ov').hidden=false;$('#ov').innerHTML=`<div class="card"><h3>🚨 EMERGENCY SNACK PROTOCOL</h3>${why?`<p>${why}</p><button class="sm" data-a="cl">OK</button>`:`<p>You are about to borrow one snack<br>from Future You.</p><p class="mono">TODAY ${left()} → ${left()+1}<br>TOMORROW ${S.set.allow} → ${tm}</p><div class="bar"><i id="pg"></i></div><button id="hold">HOLD 2s TO BREAK GLASS</button><p><button class="sm" data-a="cl">CANCEL</button></p>`}</div>`;
+const h=$('#hold');if(!h)return;let st=0,raf=0;
+const step=()=>{const p=Math.min(1,(performance.now()-st)/2000);$('#pg').style.width=p*100+'%';if(p>=1)return fire();raf=requestAnimationFrame(step)};
+h.onpointerdown=e=>{e.preventDefault();st=performance.now();raf=requestAnimationFrame(step)};
+['pointerup','pointerleave','pointercancel'].forEach(ev=>h.addEventListener(ev,()=>{cancelAnimationFrame(raf);const p=$('#pg');p&&(p.style.width=0)}))}
+function fire(){S.day.bonus++;S.ovlog.push(Date.now());save();$('#ov').hidden=true;document.body.classList.add('alarm');navigator.vibrate&&navigator.vibrate([200,100,200,100,300]);setTimeout(()=>document.body.classList.remove('alarm'),1300);disp=['OVERRIDE ACTIVE','+1 TOKEN BORROWED','TOMORROW: '+Math.max(0,S.set.allow-S.day.bonus)+' TOKENS'];render()}
+let stream=null;const stopCam=()=>{stream&&stream.getTracks().forEach(t=>t.stop());stream=null};
+async function scan(){if(!('BarcodeDetector' in window)){note="This browser can't scan barcodes. Type the number from under the barcode.";return showSheet()}
+try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});const v=$('#cam');v.hidden=false;v.srcObject=stream;await v.play();const bd=new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e']});
+const tick=async()=>{if(!stream)return;try{const r=await bd.detect(v);if(r[0]){stopCam();setBc(r[0].rawValue);return}}catch(e){}setTimeout(tick,250)};tick()}catch(e){note='Camera unavailable. Type the barcode instead.';showSheet()}}
+const toData=async u=>{const b=await (await fetch(u)).blob();return await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=no;r.readAsDataURL(b)})};
+async function setBc(b){draft.bc=b;const s=S.snacks.find(x=>x.barcode===b);
+if(s){draft.nm=s.name;draft.br=s.brand;draft.img=s.img;note='Known product: '+s.name+'. Add how many are going in.'}
+else{note='Looking up barcode...';showSheet();
+try{const r=await fetch('https://world.openfoodfacts.org/api/v2/product/'+encodeURIComponent(b)+'.json?fields=product_name,brands,image_front_small_url'),j=await r.json();
+if(j.status===1&&j.product){draft.nm=j.product.product_name||'';draft.br=(j.product.brands||'').split(',')[0].trim();const u=j.product.image_front_small_url;if(u){try{draft.img=await toData(u)}catch(e){}}note='Found: '+(draft.nm||'product')+'. Add how many are going in.'}
+else note='Not in the database. Add a name and photo so it is recognised next time.'}
+catch(e){note='Lookup failed (offline?). Add a name and photo.'}}
+showSheet()}
+function showSheet(){const el=$('#sheet');el.hidden=false;let h='';
+if(sheet==='stock'){h=`<h3>RESTOCK MACHINE</h3>${note?`<p class="msg">${esc(note)}</p>`:''}<button class="btn" style="width:100%;background:#7a4f00" data-a="scan">SCAN BARCODE</button><video id="cam" playsinline muted hidden></video>
+<input id="bc" inputmode="numeric" placeholder="Barcode (EAN/UPC)" value="${esc(draft.bc)}"><input id="nm" placeholder="Product name" value="${esc(draft.nm)}"><input id="br" placeholder="Brand (optional)" value="${esc(draft.br)}">
+<label class="btn">📷 Photograph product<input id="ph" type="file" accept="image/*" capture="environment" hidden></label>${draft.img?`<div class="row"><img src="${draft.img}" style="height:90px;object-fit:contain;flex:0 0 auto"></div>`:''}
+<div class="row"><span>How many are going in?</span><button class="sm n" data-a="dq" data-d="-1">−</button><b class="n">${draft.q}</b><button class="sm n" data-a="dq" data-d="1">+</button></div><button class="go" data-a="add">STOCK MACHINE</button>
+<h4>IN THE MACHINE</h4>${S.snacks.map((s,i)=>`<div class="item"><span>${code(i)} ${esc(s.name)}</span><button class="sm" data-a="sq" data-i="${i}" data-d="-1">−</button><b>${s.qty}</b><button class="sm" data-a="sq" data-i="${i}" data-d="1">+</button><button class="sm" data-a="del" data-i="${i}">✕</button></div>`).join('')||'<p>Empty. Scan something.</p>'}`}
+if(sheet==='hist'){h=`<h3>HISTORY</h3><p class="msg">Emergency overrides used: ${S.ovlog.length}</p>`+([...S.hist].reverse().map(x=>`<div class="hrow"><span>${esc(x.n)}<br><small>${fmt(x.t)}</small></span><b class="${x.ov?'e':''}">${x.ov?'EMERGENCY OVERRIDE':'TOKEN'}</b></div>`).join('')||'<p>Nothing vended yet.</p>')}
+if(sheet==='set'){const s=S.set;h=`<h3>SETTINGS</h3>Daily token allowance<input data-s="allow" type="number" min="0" max="10" value="${s.allow}">Emergency override<div class="row"><button class="sm" data-a="tgl">${s.ov?'ON':'OFF'}</button></div>Max borrowed tokens<input data-s="maxb" type="number" min="0" max="3" value="${s.maxb}">Token reset hour (0 = midnight)<input data-s="reset" type="number" min="0" max="23" value="${s.reset}">
+<button class="btn" data-a="demo">Load demo stock</button><button class="btn" data-a="wipe" style="background:#7a0f1c">${armed?'TAP AGAIN TO ERASE EVERYTHING':'Reset all data'}</button>`}
+el.innerHTML=`<div class="card">${h}<button class="btn" style="width:100%;margin-top:14px" data-a="close">CLOSE</button></div>`}
+const closeSheet=()=>{stopCam();$('#sheet').hidden=true;sheet='';note='';armed=false;render()};
+function pickPhoto(f){const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,260/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);draft.img=c.toDataURL('image/jpeg',.8);showSheet()};im.src=r.result};r.readAsDataURL(f)}
+function add(){const ex=S.snacks.find(x=>draft.bc&&x.barcode===draft.bc);
+if(ex){ex.qty+=draft.q;if(draft.img&&!ex.img)ex.img=draft.img}
+else{if(!draft.nm.trim()){note='Give it a name first.';return showSheet()}S.snacks.push({id:Date.now(),name:draft.nm.trim(),brand:draft.br.trim(),barcode:draft.bc,img:draft.img,qty:draft.q})}
+note='Stocked! Next product?';draft={bc:'',nm:'',br:'',img:'',q:1};save();showSheet()}
+const A={clrbin:()=>{binItem=null;render()},clr:()=>{sel=-1;disp=['SNACK','TIME! :)'];render()},vend,ovr:ovrOpen,cl:()=>{$('#ov').hidden=true},stock:()=>{sheet='stock';showSheet()},hist:()=>{sheet='hist';showSheet()},set:()=>{sheet='set';showSheet()},close:closeSheet,scan,add,
+dq:b=>{draft.q=Math.max(1,draft.q+ +b.dataset.d);showSheet()},sq:b=>{const s=S.snacks[b.dataset.i];s.qty=Math.max(0,s.qty+ +b.dataset.d);save();showSheet()},
+del:b=>{S.snacks.splice(b.dataset.i,1);save();showSheet()},tgl:()=>{S.set.ov=!S.set.ov;save();showSheet()},
+demo:()=>{[['Cadbury Dairy Milk','Cadbury',5],['Twix','Mars',1],['Walkers Cheese & Onion','Walkers',0],['Haribo Starmix','Haribo',3],['Mini Cheddars','Jacob\'s',4],['Coca-Cola Zero','Coca-Cola',2]].forEach(([n,b,q])=>S.snacks.push({id:Math.random(),name:n,brand:b,barcode:'',img:'',qty:q}));save();showSheet()},
+wipe:()=>{if(!armed){armed=true;return showSheet()}S=def();save();closeSheet()}};
+document.addEventListener('click',e=>{const sl=e.target.closest('.slot[data-i]');if(sl&&!e.target.closest('#sheet')){return pick(+sl.dataset.i)}const b=e.target.closest('[data-a]');b&&A[b.dataset.a]&&A[b.dataset.a](b)});
+document.addEventListener('input',e=>{const t=e.target,m={bc:'bc',nm:'nm',br:'br'};if(m[t.id])draft[t.id]=t.value;if(t.dataset.s){S.set[t.dataset.s]=Math.max(0,+t.value||0);save()}});
+document.addEventListener('change',e=>{const t=e.target;if(t.id==='bc'&&t.value)setBc(t.value.trim());if(t.id==='ph'&&t.files[0])pickPhoto(t.files[0])});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+render();
+</script></body></html>
