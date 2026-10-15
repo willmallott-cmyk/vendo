@@ -72,6 +72,29 @@ video{width:100%;border-radius:8px;margin-bottom:8px}
 .bin{height:96px;margin:0 10px;background:#10131a;border:4px solid #f08a1c;border-radius:16px;color:#f3e3b8;font:800 34px ui-monospace,monospace;letter-spacing:6px;cursor:pointer}
 .bin .pk{width:50px;height:70px}.bin img{height:78px}
 .nav button{background:#0b2447}
+/* brighter theme */
+body{background:linear-gradient(#3f93e6,#1d5a9e) fixed}
+.machine{background:linear-gradient(160deg,#4a9bea,#2269bd);border-color:#17508f;box-shadow:0 10px 30px rgba(10,40,90,.5)}
+.sign{text-shadow:0 0 10px #ff5a6a,0 0 2px #fff}
+.toks,.lcd{background:#222b45}
+.glass{background:linear-gradient(#3a4668,#232b48);border-color:#2c3452;box-shadow:inset 0 0 16px rgba(0,0,0,.35),0 0 0 3px #ff9a2e,0 0 26px rgba(255,160,50,.7)}
+.glass:after{background:linear-gradient(115deg,rgba(255,255,255,.22),transparent 30%,transparent 62%,rgba(255,255,255,.08))}
+.slot{background:radial-gradient(ellipse at 50% 0,rgba(255,205,110,.5),rgba(255,205,110,.08) 70%);border-bottom-color:#59617f}
+.it{filter:brightness(calc(1.08 - var(--k)*.1)) drop-shadow(0 3px 2px rgba(0,0,0,.5))}
+.pk{filter:brightness(1.3) saturate(1.2)}
+.coil{border-color:#d4d9e3}
+.tag{background:#262e4a}
+.so{color:#ff8593;text-shadow:0 0 4px #000}
+.keys{background:#1a3a66}.k,.rdr,.coin{background:#26344f}
+.bin{background:#26344f}
+.nav button{background:#2c78cc}
+#sheet,#ov{background:rgba(10,30,60,.6)}
+.card{background:#27456b;color:#fff}
+#ov .card{background:#3a1f2a}
+input{background:#1c3556;border-color:#5a7ca8}
+.btn,.sm,#sheet button.sm{background:#3d6fb0}
+.item,.hrow{border-color:#46688f}
+h4,.hrow small{color:#c3d8f2}
 </style></head><body><div id="app"></div><div id="sheet" hidden></div><div id="ov" hidden></div>
 <script>
 const K='vendo1',$=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
