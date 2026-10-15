@@ -97,13 +97,18 @@ input{background:#1c3556;border-color:#5a7ca8}
 h4,.hrow small{color:#c3d8f2}
 #sheet[hidden],#ov[hidden]{display:none}
 .ver{grid-column:1/3;text-align:center;font-size:10px;color:#fff;opacity:.7;margin-top:8px}
-</style></head><body><div id="app"></div><div id="sheet" hidden></div><div id="ov" hidden></div>
+.bin{position:relative}.bin.wait{animation:pl 1s infinite alternate}
+@keyframes pl{from{box-shadow:0 0 3px #f08a1c}to{box-shadow:0 0 20px 4px #ffb43a}}
+.bin.open{background:#1a2238;animation:none}.bin.open .pk,.bin.open img{animation:pop .45s ease-out}
+@keyframes pop{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.bn{font:700 13px ui-monospace,monospace;letter-spacing:0;margin-left:12px;color:#f3e3b8;text-align:left;max-width:55%}
+</style><script async src="https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js"></script></head><body><div id="app"></div><div id="sheet" hidden></div><div id="ov" hidden></div>
 <script>
 const K='vendo1',$=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const def=()=>({snacks:[],hist:[],ovlog:[],set:{allow:2,ov:true,maxb:1,reset:0},day:{d:'',base:2,used:0,bonus:0}});
 let S=(()=>{try{const o=JSON.parse(localStorage.getItem(K)||'{}'),d=def();return{...d,...o,set:{...d.set,...o.set},day:{...d.day,...o.day}}}catch(e){return def()}})();
 const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
-let sel=-1,busy=false,binItem=null,sheet='',draft={bc:'',nm:'',br:'',img:'',q:1},note='',armed=false,disp=['SNACK','TIME! :)'];
+let sel=-1,busy=false,binItem=null,binOpen=false,sheet='',draft={bc:'',nm:'',br:'',img:'',q:1},note='',armed=false,disp=['SNACK','TIME! :)'];
 const dayKey=()=>{const d=new Date(Date.now()-S.set.reset*36e5);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
 function roll(){const t=dayKey();if(S.day.d!==t){const b=S.day.d?S.day.bonus:0;S.day={d:t,base:Math.max(0,S.set.allow-b),used:0,bonus:0};save()}}
 const left=()=>S.day.base+S.day.bonus-S.day.used,code=i=>String.fromCharCode(65+Math.floor(i/3))+(i%3+1);
@@ -120,14 +125,14 @@ $('#app').innerHTML=`<div class="machine"><div class="top"><div class="sign">VEN
 <div class="glass"><div class="grid">${g}</div></div>
 <div class="panel"><div class="lcd">${disp.map(esc).join('\n')}</div><div class="keys">${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="k">${n}</button>`).join('')}<button class="k" data-a="clr">←</button><button class="k">0</button><button class="k ok" data-a="vend">OK</button></div><div class="rdr"></div><div class="coin"></div></div>
 <div class="brk"><button data-a="ovr">🚨 BREAK GLASS · STRESS OVERRIDE</button></div>
-<div class="bin" data-a="clrbin">${binItem?pic(binItem):'PUSH'}</div>
-<div class="nav"><button data-a="stock">SERVICE</button><button data-a="hist">HISTORY</button><button data-a="set">SETTINGS</button></div><div class="ver">build v4</div></div>`}
+<div class="bin${binItem?' wait':''}${binOpen?' open':''}" data-a="push">${binOpen&&binItem?pic(binItem)+'<span class="bn">'+esc(binItem.name)+'</span>':'PUSH'}</div>
+<div class="nav"><button data-a="stock">SERVICE</button><button data-a="hist">HISTORY</button><button data-a="set">SETTINGS</button></div><div class="ver">build v5</div></div>`}
 function pick(i){if(busy)return;const s=S.snacks[i];if(!s)return;sel=i;disp=[code(i),s.name.toUpperCase(),s.qty<1?'SOLD OUT':'1 TOKEN'];navigator.vibrate&&navigator.vibrate(10);render()}
 function vend(){if(busy)return;const s=S.snacks[sel];if(!s){disp=['SELECT A SLOT','FIRST'];return render()}
 if(s.qty<1){disp=[code(sel),'SOLD OUT'];return render()}
 if(left()<1){disp=['NO TOKENS LEFT','TRY AGAIN TOMORROW','OR BREAK THE GLASS'];return render()}
 busy=true;disp=['DISPENSING...',s.name.toUpperCase()];render();const f=document.querySelector('.slot.sel .it');f&&f.classList.add('drop');navigator.vibrate&&navigator.vibrate([30,40,60]);
-setTimeout(()=>{const ov=S.day.used>=S.day.base;S.day.used++;s.qty--;S.hist.push({t:Date.now(),n:s.name,ov});binItem=s;disp=['KA-CHUNK',s.name.toUpperCase()+' DISPENSED','Go and grab one from the cupboard.','Stock remaining: '+s.qty];busy=false;sel=-1;save();render()},900)}
+setTimeout(()=>{const ov=S.day.used>=S.day.base;S.day.used++;s.qty--;S.hist.push({t:Date.now(),n:s.name,ov});binItem=s;binOpen=false;disp=['KA-CHUNK',s.name.toUpperCase()+' DISPENSED','Push the flap, then grab one from the cupboard.','Stock remaining: '+s.qty];busy=false;sel=-1;save();render()},900)}
 function ovrOpen(){const d=S.day;let why='';
 if(!S.set.ov)why='Emergency override is switched off in settings.';
 else if(left()>0)why='You still have tokens. Use those first.';
@@ -140,10 +145,17 @@ const step=()=>{const p=Math.min(1,(performance.now()-st)/2000);$('#pg').style.w
 h.onpointerdown=e=>{e.preventDefault();st=performance.now();raf=requestAnimationFrame(step)};
 ['pointerup','pointerleave','pointercancel'].forEach(ev=>h.addEventListener(ev,()=>{cancelAnimationFrame(raf);const p=$('#pg');p&&(p.style.width=0)}))}
 function fire(){S.day.bonus++;S.ovlog.push(Date.now());save();$('#ov').hidden=true;document.body.classList.add('alarm');navigator.vibrate&&navigator.vibrate([200,100,200,100,300]);setTimeout(()=>document.body.classList.remove('alarm'),1300);disp=['OVERRIDE ACTIVE','+1 TOKEN BORROWED','TOMORROW: '+Math.max(0,S.set.allow-S.day.bonus)+' TOKENS'];render()}
-let stream=null;const stopCam=()=>{stream&&stream.getTracks().forEach(t=>t.stop());stream=null};
-async function scan(){if(!('BarcodeDetector' in window)){note="This browser can't scan barcodes. Type the number from under the barcode.";return showSheet()}
-try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});const v=$('#cam');v.hidden=false;v.srcObject=stream;await v.play();const bd=new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e']});
-const tick=async()=>{if(!stream)return;try{const r=await bd.detect(v);if(r[0]){stopCam();setBc(r[0].rawValue);return}}catch(e){}setTimeout(tick,250)};tick()}catch(e){note='Camera unavailable. Type the barcode instead.';showSheet()}}
+let stream=null,zr=null;const stopCam=()=>{stream&&stream.getTracks().forEach(t=>t.stop());stream=null;if(zr){try{zr.reset()}catch(e){}zr=null}};
+async function scan(){const v=$('#cam');if(!v)return;
+try{
+if('BarcodeDetector' in window){stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});v.hidden=false;v.srcObject=stream;await v.play();const bd=new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e']});
+const tick=async()=>{if(!stream)return;try{const r=await bd.detect(v);if(r[0]){stopCam();setBc(r[0].rawValue);return}}catch(e){}setTimeout(tick,250)};tick()}
+else if(window.ZXing){const Z=ZXing,h=new Map();h.set(Z.DecodeHintType.POSSIBLE_FORMATS,[Z.BarcodeFormat.EAN_13,Z.BarcodeFormat.EAN_8,Z.BarcodeFormat.UPC_A,Z.BarcodeFormat.UPC_E]);h.set(Z.DecodeHintType.TRY_HARDER,true);
+v.hidden=false;v.setAttribute('playsinline','');v.muted=true;zr=new Z.BrowserMultiFormatReader(h);
+await zr.decodeFromConstraints({video:{facingMode:'environment'}},v,r=>{if(r){const b=r.getText();stopCam();setBc(b)}})}
+else{note="Scanner library didn't load (offline?). Type the barcode number instead.";showSheet()}
+}catch(e){stopCam();note='Camera unavailable: allow camera access, or type the barcode number instead.';showSheet()}}
+function setBcPlaceholder(){}
 const toData=async u=>{const b=await (await fetch(u)).blob();return await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=no;r.readAsDataURL(b)})};
 async function setBc(b){draft.bc=b;const s=S.snacks.find(x=>x.barcode===b);
 if(s){draft.nm=s.name;draft.br=s.brand;draft.img=s.img;note='Known product: '+s.name+'. Add how many are going in.'}
@@ -169,7 +181,7 @@ function add(){const ex=S.snacks.find(x=>draft.bc&&x.barcode===draft.bc);
 if(ex){ex.qty+=draft.q;if(draft.img&&!ex.img)ex.img=draft.img}
 else{if(!draft.nm.trim()){note='Give it a name first.';return showSheet()}S.snacks.push({id:Date.now(),name:draft.nm.trim(),brand:draft.br.trim(),barcode:draft.bc,img:draft.img,qty:draft.q})}
 note='Stocked! Next product?';draft={bc:'',nm:'',br:'',img:'',q:1};save();showSheet()}
-const A={clrbin:()=>{binItem=null;render()},clr:()=>{sel=-1;disp=['SNACK','TIME! :)'];render()},vend,ovr:ovrOpen,cl:()=>{$('#ov').hidden=true},stock:()=>{sheet='stock';showSheet()},hist:()=>{sheet='hist';showSheet()},set:()=>{sheet='set';showSheet()},close:closeSheet,scan,add,
+const A={push:()=>{navigator.vibrate&&navigator.vibrate(25);if(!binItem){disp=['NOTHING IN','THE BIN YET'];return render()}if(!binOpen){binOpen=true;disp=['FLAP OPEN','GRAB YOUR',binItem.name.toUpperCase(),'TAP TO CLOSE']}else{binOpen=false;binItem=null;disp=['SNACK','TIME! :)']}render()},clr:()=>{sel=-1;disp=['SNACK','TIME! :)'];render()},vend,ovr:ovrOpen,cl:()=>{$('#ov').hidden=true},stock:()=>{sheet='stock';showSheet()},hist:()=>{sheet='hist';showSheet()},set:()=>{sheet='set';showSheet()},close:closeSheet,scan,add,
 dq:b=>{draft.q=Math.max(1,draft.q+ +b.dataset.d);showSheet()},sq:b=>{const s=S.snacks[b.dataset.i];s.qty=Math.max(0,s.qty+ +b.dataset.d);save();showSheet()},
 del:b=>{S.snacks.splice(b.dataset.i,1);save();showSheet()},tgl:()=>{S.set.ov=!S.set.ov;save();showSheet()},
 demo:()=>{[['Cadbury Dairy Milk','Cadbury',5],['Twix','Mars',1],['Walkers Cheese & Onion','Walkers',0],['Haribo Starmix','Haribo',3],['Mini Cheddars','Jacob\'s',4],['Coca-Cola Zero','Coca-Cola',2]].forEach(([n,b,q])=>S.snacks.push({id:Math.random(),name:n,brand:b,barcode:'',img:'',qty:q}));save();showSheet()},
