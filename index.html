@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Vendo</title><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icons/icon-180.png"><meta name="theme-color" content="#1d5a9e"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Vendo"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Vendo</title><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icons/icon-180.png"><meta name="theme-color" content="#1d3c34"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Vendo"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
 :root{--bg:#0e1013;--metal:#2a2e33;--led:#ffb000;--red:#e0243a;--ink:#e8e6e1;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e1013}}
@@ -102,31 +102,66 @@ h4,.hrow small{color:#c3d8f2}
 .bin.open{background:#1a2238;animation:none}.bin.open .pk,.bin.open img{animation:pop .45s ease-out}
 @keyframes pop{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
 .bn{font:700 13px ui-monospace,monospace;letter-spacing:0;margin-left:12px;color:#f3e3b8;text-align:left;max-width:55%}
-</style><script async src="https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js"></script></head><body><div id="app"></div><div id="sheet" hidden></div><div id="ov" hidden></div>
+/* v6 theme */
+body{background:linear-gradient(#2f5d51,#14302a) fixed}
+.machine{max-width:460px;margin:4px auto;grid-template-columns:1fr 88px;background:linear-gradient(160deg,#25493f,#112620);border:3px solid #0a1914;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.sign{color:#f1e6c8;font-size:22px;letter-spacing:5px;text-shadow:0 0 8px rgba(255,120,60,.7)}
+.toks{background:#0f2a55;color:#cfe3ff;border-color:#0a0f12;text-shadow:none}
+.glass{margin:0 6px 10px 8px;padding:4px;background:linear-gradient(#5a3f20,#1c130b);border:5px solid #101a16;box-shadow:inset 0 0 34px rgba(255,170,60,.45),0 0 0 3px #2c5246,0 0 22px rgba(255,170,60,.35)}
+.glass:before{left:8%;right:8%;background:#ffd89a;box-shadow:0 0 14px #ffb85a}
+.grid{grid-template-columns:repeat(4,1fr);gap:0}
+.slot{height:108px;border-left:2px solid rgba(0,0,0,.4);border-bottom:8px solid #23272a;background:radial-gradient(ellipse at 50% 0,rgba(255,205,120,.42),transparent 78%)}
+.slot:nth-child(4n+1){border-left:0}
+.slot.sel{outline:2px solid #ffc15a;outline-offset:-2px;box-shadow:inset 0 0 18px rgba(255,190,90,.7)}
+.it{width:74%;height:72px;bottom:28px}
+.coil{left:14%;right:14%;bottom:24px;height:22px;border:3px solid #aeb4bc;border-top:0;border-radius:0 0 26px 26px;background:none;opacity:.95}
+.tag{background:#2a2d31;border:1px solid #4a4e53;padding:1px 7px;font-size:10px;bottom:2px;gap:4px}
+.gh{position:absolute;left:50%;bottom:28px;width:70%;height:72px;transform:translateX(-50%);color:#8d949b;opacity:.3}
+.gh svg{width:100%;height:100%}
+.slot.out .it{filter:grayscale(1) brightness(.55);opacity:.6}
+.so{top:30%;font-size:10px}
+.panel{margin:0 8px 10px 0;gap:8px}
+.lcd{height:128px;min-height:128px;background:#0f2a55;border:3px solid #0a0f12;border-radius:6px;color:#cfe3ff;text-shadow:none;font:500 11px/1.25 system-ui,sans-serif;text-align:center;padding:6px 3px;display:flex;flex-direction:column;justify-content:center}
+.slogan{font:700 21px/1 "Bradley Hand","Segoe Print","Comic Sans MS",cursive;color:#f1e6c8;text-align:center;transform:rotate(-6deg);margin:2px 0 4px}
+.keys{background:none;padding:0 2px;gap:6px}
+.k{aspect-ratio:1;border-radius:50%;background:#0d100f;color:#f1e6c8;border:0;box-shadow:0 2px 0 #000,inset 0 1px 0 #3a3f3d;padding:0;font:600 12px system-ui,sans-serif}
+.rdr{height:60px;transform:none;background:#0d100f;border:3px solid #1b211f;border-radius:8px;color:#f1e6c8;font-size:15px}
+.rdr:after{content:"((\2022))"}
+.vbtn{display:flex;flex-direction:column;align-items:center;gap:4px;color:#f1e6c8;font:700 10px ui-monospace,monospace;letter-spacing:2px}
+.vbtn button{width:42px;height:46px;border-radius:6px;background:linear-gradient(#e2e2e2,#8c9196);border:2px solid #3a3d40;box-shadow:0 3px 0 #1c1e20;padding:0;position:relative}
+.vbtn button:after{content:"";position:absolute;inset:0;margin:auto;width:16px;height:16px;border-radius:50%;border:2px solid #555}
+.vbtn.rdy button{box-shadow:0 0 14px 3px #6ff09a,0 3px 0 #1c1e20}
+.bin{background:#0c0e0d;border:6px solid #1c211f;border-radius:14px;color:#f1e6c8;box-shadow:inset 0 0 20px #000}
+.nav button{background:#2e5a4c}
+.card{background:#1f3b34}input{background:#14302a;border-color:#4b7a6c}
+.btn,.sm,#sheet button.sm{background:#3a6b5c}
+.item,.hrow{border-color:#3a6155}h4,.hrow small{color:#b9d9cc}
+</style><script async src="https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js" onerror="var z=document.createElement('script');z.src='https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js';document.head.appendChild(z)"></script></head><body><div id="app"></div><div id="sheet" hidden></div><div id="ov" hidden></div>
 <script>
 const K='vendo1',$=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const def=()=>({snacks:[],hist:[],ovlog:[],set:{allow:2,ov:true,maxb:1,reset:0},day:{d:'',base:2,used:0,bonus:0}});
 let S=(()=>{try{const o=JSON.parse(localStorage.getItem(K)||'{}'),d=def();return{...d,...o,set:{...d.set,...o.set},day:{...d.day,...o.day}}}catch(e){return def()}})();
 const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
-let sel=-1,busy=false,binItem=null,binOpen=false,sheet='',draft={bc:'',nm:'',br:'',img:'',q:1},note='',armed=false,disp=['SNACK','TIME! :)'];
+let sel=-1,busy=false,binItem=null,binOpen=false,sheet='',draft={bc:'',nm:'',br:'',img:'',q:1},note='',armed=false,disp=['Select','your snack','\u263A'];
 const dayKey=()=>{const d=new Date(Date.now()-S.set.reset*36e5);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
 function roll(){const t=dayKey();if(S.day.d!==t){const b=S.day.d?S.day.bonus:0;S.day={d:t,base:Math.max(0,S.set.allow-b),used:0,bonus:0};save()}}
-const left=()=>S.day.base+S.day.bonus-S.day.used,code=i=>String.fromCharCode(65+Math.floor(i/3))+(i%3+1);
+const left=()=>S.day.base+S.day.bonus-S.day.used,code=i=>String.fromCharCode(65+Math.floor(i/4))+(i%4+1);
+const GH=['<svg viewBox="0 0 60 90"><path d="M6 6h48l-2 9 3 6-3 64H8L5 21l3-6z" fill="currentColor"/><rect x="14" y="34" width="32" height="24" rx="5" fill="#000" opacity=".25"/></svg>','<svg viewBox="0 0 60 90"><rect x="18" y="4" width="24" height="82" rx="4" fill="currentColor"/><rect x="18" y="30" width="24" height="26" fill="#000" opacity=".25"/></svg>','<svg viewBox="0 0 60 90"><rect x="12" y="14" width="36" height="72" rx="5" fill="currentColor"/><rect x="10" y="6" width="40" height="10" rx="3" fill="currentColor"/><rect x="12" y="38" width="36" height="22" fill="#000" opacity=".25"/></svg>','<svg viewBox="0 0 60 90"><rect x="8" y="14" width="44" height="70" rx="10" fill="currentColor"/><circle cx="30" cy="48" r="13" fill="#000" opacity=".25"/></svg>'];
 const hue=s=>[...s].reduce((a,c)=>a+c.charCodeAt(0),0)%360;
 const pic=s=>s.img?`<img src="${s.img}" alt="${esc(s.name)}">`:`<div class="pk" style="background:hsl(${hue(s.name)} 55% 38%)"><b>${esc(s.brand)}</b>${esc(s.name)}</div>`;
 const fmt=t=>{const d=new Date(t);return d.toLocaleDateString([], {day:'numeric',month:'short'})+' '+d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})};
-function render(){roll();const n=Math.max(12,Math.ceil(S.snacks.length/3)*3);let g='';
+function render(){roll();const n=Math.max(20,Math.ceil(S.snacks.length/4)*4);let g='';
 for(let i=0;i<n;i++){const s=S.snacks[i],c=code(i);
-if(!s){g+=`<div class="slot"><div class="coil"></div><div class="tag"><span>${c}</span><span>—</span></div></div>`;continue}
-let it='';for(let k=0;k<Math.min(s.qty,5);k++)it+=`<div class="it" style="--k:${k}">${pic(s)}</div>`;
-g+=`<div class="slot${i===sel?' sel':''}" data-i="${i}">${it}<div class="coil"></div>${s.qty<1?'<div class="so">SOLD OUT</div>':''}<div class="tag"><span>${c}</span><span>×${s.qty}</span></div></div>`}
+if(!s){g+=`<div class="slot"><div class="gh">${GH[i%4]}</div><div class="coil"></div><div class="tag"><span>${c}</span><span>—</span></div></div>`;continue}
+let it=s.qty<1?'<div class="it" style="--k:0">'+pic(s)+'</div>':'';for(let k=0;k<Math.min(s.qty,5);k++)it+=`<div class="it" style="--k:${k}">${pic(s)}</div>`;
+g+=`<div class="slot${i===sel?' sel':''}${s.qty<1?' out':''}" data-i="${i}">${it}<div class="coil"></div>${s.qty<1?'<div class="so">SOLD OUT</div>':''}<div class="tag"><span>${c}</span><span>×${s.qty}</span></div></div>`}
 const L=left(),tot=S.day.base+S.day.bonus,dots=Array.from({length:tot},(_,i)=>i<L?'●':'○').join(' ')||'—';
 $('#app').innerHTML=`<div class="machine"><div class="top"><div class="sign">VENDO</div><div class="toks">TOKENS ${dots}</div></div>
 <div class="glass"><div class="grid">${g}</div></div>
-<div class="panel"><div class="lcd">${disp.map(esc).join('\n')}</div><div class="keys">${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="k">${n}</button>`).join('')}<button class="k" data-a="clr">←</button><button class="k">0</button><button class="k ok" data-a="vend">OK</button></div><div class="rdr"></div><div class="coin"></div></div>
+<div class="panel"><div class="slogan">Good<br>Snacks<br>Good<br>Mood<br>&#9786;</div><div class="lcd">${disp.map(esc).join('\n')}</div><div class="keys">${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="k">${n}</button>`).join('')}<button class="k" data-a="clr">*</button><button class="k">0</button><button class="k">#</button></div><div class="rdr"></div><div class="vbtn${sel>=0&&S.snacks[sel]&&S.snacks[sel].qty>0?' rdy':''}"><button data-a="vend" aria-label="Vend"></button><span>VEND</span></div></div>
 <div class="brk"><button data-a="ovr">🚨 BREAK GLASS · STRESS OVERRIDE</button></div>
 <div class="bin${binItem?' wait':''}${binOpen?' open':''}" data-a="push">${binOpen&&binItem?pic(binItem)+'<span class="bn">'+esc(binItem.name)+'</span>':'PUSH'}</div>
-<div class="nav"><button data-a="stock">SERVICE</button><button data-a="hist">HISTORY</button><button data-a="set">SETTINGS</button></div><div class="ver">build v5</div></div>`}
+<div class="nav"><button data-a="stock">SERVICE</button><button data-a="hist">HISTORY</button><button data-a="set">SETTINGS</button></div><div class="ver">build v6</div></div>`}
 function pick(i){if(busy)return;const s=S.snacks[i];if(!s)return;sel=i;disp=[code(i),s.name.toUpperCase(),s.qty<1?'SOLD OUT':'1 TOKEN'];navigator.vibrate&&navigator.vibrate(10);render()}
 function vend(){if(busy)return;const s=S.snacks[sel];if(!s){disp=['SELECT A SLOT','FIRST'];return render()}
 if(s.qty<1){disp=[code(sel),'SOLD OUT'];return render()}
@@ -146,16 +181,22 @@ h.onpointerdown=e=>{e.preventDefault();st=performance.now();raf=requestAnimation
 ['pointerup','pointerleave','pointercancel'].forEach(ev=>h.addEventListener(ev,()=>{cancelAnimationFrame(raf);const p=$('#pg');p&&(p.style.width=0)}))}
 function fire(){S.day.bonus++;S.ovlog.push(Date.now());save();$('#ov').hidden=true;document.body.classList.add('alarm');navigator.vibrate&&navigator.vibrate([200,100,200,100,300]);setTimeout(()=>document.body.classList.remove('alarm'),1300);disp=['OVERRIDE ACTIVE','+1 TOKEN BORROWED','TOMORROW: '+Math.max(0,S.set.allow-S.day.bonus)+' TOKENS'];render()}
 let stream=null,zr=null;const stopCam=()=>{stream&&stream.getTracks().forEach(t=>t.stop());stream=null;if(zr){try{zr.reset()}catch(e){}zr=null}};
+const zh=()=>{const Z=ZXing,h=new Map();h.set(Z.DecodeHintType.POSSIBLE_FORMATS,[Z.BarcodeFormat.EAN_13,Z.BarcodeFormat.EAN_8,Z.BarcodeFormat.UPC_A,Z.BarcodeFormat.UPC_E]);h.set(Z.DecodeHintType.TRY_HARDER,true);return h};
 async function scan(){const v=$('#cam');if(!v)return;
 try{
-if('BarcodeDetector' in window){stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});v.hidden=false;v.srcObject=stream;await v.play();const bd=new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e']});
-const tick=async()=>{if(!stream)return;try{const r=await bd.detect(v);if(r[0]){stopCam();setBc(r[0].rawValue);return}}catch(e){}setTimeout(tick,250)};tick()}
-else if(window.ZXing){const Z=ZXing,h=new Map();h.set(Z.DecodeHintType.POSSIBLE_FORMATS,[Z.BarcodeFormat.EAN_13,Z.BarcodeFormat.EAN_8,Z.BarcodeFormat.UPC_A,Z.BarcodeFormat.UPC_E]);h.set(Z.DecodeHintType.TRY_HARDER,true);
-v.hidden=false;v.setAttribute('playsinline','');v.muted=true;zr=new Z.BrowserMultiFormatReader(h);
+if(window.ZXing){v.hidden=false;v.muted=true;v.setAttribute('playsinline','');zr=new ZXing.BrowserMultiFormatReader(zh());
 await zr.decodeFromConstraints({video:{facingMode:'environment'}},v,r=>{if(r){const b=r.getText();stopCam();setBc(b)}})}
-else{note="Scanner library didn't load (offline?). Type the barcode number instead.";showSheet()}
-}catch(e){stopCam();note='Camera unavailable: allow camera access, or type the barcode number instead.';showSheet()}}
-function setBcPlaceholder(){}
+else if('BarcodeDetector' in window){stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});v.hidden=false;v.srcObject=stream;await v.play();const bd=new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e']});
+const tick=async()=>{if(!stream)return;try{const r=await bd.detect(v);if(r[0]){stopCam();setBc(r[0].rawValue);return}}catch(e){}setTimeout(tick,250)};tick()}
+else{note="Scanner library didn't load. Check your connection, or use Photo of barcode, or type the number.";showSheet()}
+}catch(e){stopCam();note='Camera error ('+((e&&e.name)||'unknown')+'). Allow camera access, or use Photo of barcode, or type the number.';showSheet()}}
+async function decodePhoto(f){note='Reading barcode...';showSheet();let code='';
+try{const url=await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=no;r.readAsDataURL(f)});
+const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=url});
+const k=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+if(window.ZXing){const r=await new ZXing.BrowserMultiFormatReader(zh()).decodeFromImageUrl(c.toDataURL('image/jpeg',.9));code=r.getText()}
+else if('BarcodeDetector' in window){const r=await new BarcodeDetector().detect(c);code=(r[0]&&r[0].rawValue)||''}}catch(e){}
+if(code)return setBc(code);note="Couldn't read a barcode. Fill the frame with just the barcode in good light, or type the number.";showSheet()}
 const toData=async u=>{const b=await (await fetch(u)).blob();return await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=no;r.readAsDataURL(b)})};
 async function setBc(b){draft.bc=b;const s=S.snacks.find(x=>x.barcode===b);
 if(s){draft.nm=s.name;draft.br=s.brand;draft.img=s.img;note='Known product: '+s.name+'. Add how many are going in.'}
@@ -166,7 +207,7 @@ else note='Not in the database. Add a name and photo so it is recognised next ti
 catch(e){note='Lookup failed (offline?). Add a name and photo.'}}
 showSheet()}
 function showSheet(){const el=$('#sheet');el.hidden=false;let h='';
-if(sheet==='stock'){h=`<h3>RESTOCK MACHINE</h3>${note?`<p class="msg">${esc(note)}</p>`:''}<button class="btn" style="width:100%;background:#7a4f00" data-a="scan">SCAN BARCODE</button><video id="cam" playsinline muted hidden></video>
+if(sheet==='stock'){h=`<h3>RESTOCK MACHINE</h3>${note?`<p class="msg">${esc(note)}</p>`:''}<button class="btn" style="width:100%;background:#7a4f00" data-a="scan">SCAN BARCODE (LIVE CAMERA)</button><label class="btn">&#128269; Photo of barcode<input id="bp" type="file" accept="image/*" capture="environment" hidden></label><video id="cam" autoplay playsinline muted hidden></video>
 <input id="bc" inputmode="numeric" placeholder="Barcode (EAN/UPC)" value="${esc(draft.bc)}"><input id="nm" placeholder="Product name" value="${esc(draft.nm)}"><input id="br" placeholder="Brand (optional)" value="${esc(draft.br)}">
 <label class="btn">📷 Photograph product<input id="ph" type="file" accept="image/*" capture="environment" hidden></label>${draft.img?`<div class="row"><img src="${draft.img}" style="height:90px;object-fit:contain;flex:0 0 auto"></div>`:''}
 <div class="row"><span>How many are going in?</span><button class="sm n" data-a="dq" data-d="-1">−</button><b class="n">${draft.q}</b><button class="sm n" data-a="dq" data-d="1">+</button></div><button class="go" data-a="add">STOCK MACHINE</button>
@@ -181,14 +222,14 @@ function add(){const ex=S.snacks.find(x=>draft.bc&&x.barcode===draft.bc);
 if(ex){ex.qty+=draft.q;if(draft.img&&!ex.img)ex.img=draft.img}
 else{if(!draft.nm.trim()){note='Give it a name first.';return showSheet()}S.snacks.push({id:Date.now(),name:draft.nm.trim(),brand:draft.br.trim(),barcode:draft.bc,img:draft.img,qty:draft.q})}
 note='Stocked! Next product?';draft={bc:'',nm:'',br:'',img:'',q:1};save();showSheet()}
-const A={push:()=>{navigator.vibrate&&navigator.vibrate(25);if(!binItem){disp=['NOTHING IN','THE BIN YET'];return render()}if(!binOpen){binOpen=true;disp=['FLAP OPEN','GRAB YOUR',binItem.name.toUpperCase(),'TAP TO CLOSE']}else{binOpen=false;binItem=null;disp=['SNACK','TIME! :)']}render()},clr:()=>{sel=-1;disp=['SNACK','TIME! :)'];render()},vend,ovr:ovrOpen,cl:()=>{$('#ov').hidden=true},stock:()=>{sheet='stock';showSheet()},hist:()=>{sheet='hist';showSheet()},set:()=>{sheet='set';showSheet()},close:closeSheet,scan,add,
+const A={push:()=>{navigator.vibrate&&navigator.vibrate(25);if(!binItem){disp=['NOTHING IN','THE BIN YET'];return render()}if(!binOpen){binOpen=true;disp=['FLAP OPEN','GRAB YOUR',binItem.name.toUpperCase(),'TAP TO CLOSE']}else{binOpen=false;binItem=null;disp=['Select','your snack','\u263A']}render()},clr:()=>{sel=-1;disp=['Select','your snack','\u263A'];render()},vend,ovr:ovrOpen,cl:()=>{$('#ov').hidden=true},stock:()=>{sheet='stock';showSheet()},hist:()=>{sheet='hist';showSheet()},set:()=>{sheet='set';showSheet()},close:closeSheet,scan,add,
 dq:b=>{draft.q=Math.max(1,draft.q+ +b.dataset.d);showSheet()},sq:b=>{const s=S.snacks[b.dataset.i];s.qty=Math.max(0,s.qty+ +b.dataset.d);save();showSheet()},
 del:b=>{S.snacks.splice(b.dataset.i,1);save();showSheet()},tgl:()=>{S.set.ov=!S.set.ov;save();showSheet()},
 demo:()=>{[['Cadbury Dairy Milk','Cadbury',5],['Twix','Mars',1],['Walkers Cheese & Onion','Walkers',0],['Haribo Starmix','Haribo',3],['Mini Cheddars','Jacob\'s',4],['Coca-Cola Zero','Coca-Cola',2]].forEach(([n,b,q])=>S.snacks.push({id:Math.random(),name:n,brand:b,barcode:'',img:'',qty:q}));save();showSheet()},
 wipe:()=>{if(!armed){armed=true;return showSheet()}S=def();save();closeSheet()}};
 document.addEventListener('click',e=>{const sl=e.target.closest('.slot[data-i]');if(sl&&!e.target.closest('#sheet')){return pick(+sl.dataset.i)}const b=e.target.closest('[data-a]');b&&A[b.dataset.a]&&A[b.dataset.a](b)});
 document.addEventListener('input',e=>{const t=e.target,m={bc:'bc',nm:'nm',br:'br'};if(m[t.id])draft[t.id]=t.value;if(t.dataset.s){S.set[t.dataset.s]=Math.max(0,+t.value||0);save()}});
-document.addEventListener('change',e=>{const t=e.target;if(t.id==='bc'&&t.value)setBc(t.value.trim());if(t.id==='ph'&&t.files[0])pickPhoto(t.files[0])});
+document.addEventListener('change',e=>{const t=e.target;if(t.id==='bc'&&t.value)setBc(t.value.trim());if(t.id==='ph'&&t.files[0])pickPhoto(t.files[0]);if(t.id==='bp'&&t.files[0])decodePhoto(t.files[0])});
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 render();
 </script></body></html>
